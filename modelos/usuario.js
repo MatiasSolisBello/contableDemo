@@ -8,7 +8,7 @@ const UsuarioSchema = Schema({
     nombre: {type: String, required:true },
     correo: {type: String, required:true },
     clave: {type: String, required:true },
-    role: {type: Schema.ObjectId, ref: "roles", required:true}
+    role: {type: Schema.ObjectId, ref: "role", required:true}
 })
 
 //------------------------------------------------------------

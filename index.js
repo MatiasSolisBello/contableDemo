@@ -16,8 +16,6 @@ var rol_routes = require('./routes/rolRoute');
 var producto_routes = require('./routes/productoRoute');
 var auth_routes = require('./routes/authRoute');
 
-const authToken = require('./middlewares/AuthToken');
-
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(bodyParser.json())
 

@@ -9,7 +9,7 @@ const BodegaSchema = Schema({
     descripcion: {type: String, required:true},
     estado: {
         type: String, required:true, 
-        enum: ['Mantencion', 'Abierto', 'Cerrado'] 
+        enum: ['EN Mantencion', 'Abierto', 'Cerrado'] 
     },    
     usuario: {type: Schema.ObjectId, ref: "usuario", required:true},      
 })

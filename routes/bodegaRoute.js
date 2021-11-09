@@ -1,18 +1,32 @@
 'use strict'
 
-//Cargamos modulo express para crear nuevas rutas
-var express = require('express');
+const express = require('express');
+const bodegaController = require('../controllers/bodegaController');
+const auth = require('../middlewares/autenticacion');
+const api= express.Router();
 
-//cargamos el controlador
-var bodegaController = require('../controllers/bodegaController');
+api.post(
+    '/bodega',
+    [auth.verificaToken],
+    bodegaController.guardar
+)
 
-//llamamos al router
-var api= express.Router();
+api.get(
+    '/bodega',
+    [auth.verificaToken],
+    bodegaController.buscar
+)
 
-//guardamos empresa
-api.post('/bodega',bodegaController.guardar)
-api.get('/bodega',bodegaController.buscar)
-api.put('/bodega/:id',bodegaController.editar)
-api.delete('/bodega/:id',bodegaController.borrar)
-//exportamos configuracion
+api.put(
+    '/bodega/:id',
+    [auth.verificaToken],
+    bodegaController.editar
+)
+
+api.delete(
+    '/bodega/:id',
+    [auth.verificaToken],
+    bodegaController.borrar
+)
+
 module.exports = api;

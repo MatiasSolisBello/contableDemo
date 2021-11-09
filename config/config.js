@@ -1,3 +1,3 @@
 module.exports = {
-    SECRET_TOKEN: process.env.SECRET_TOKEN || 'smart-software-spa-key'
+    SECRET_TOKEN: process.env.SECRET_TOKEN || 'contables-key'
 }

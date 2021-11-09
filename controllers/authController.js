@@ -1,46 +1,87 @@
 const Usuario = require('../modelos/usuario');
 const bcrypt = require('bcrypt');
-const CONFIG = require('../config/config');
+const config = require("../config/config")
 const jwt = require('jsonwebtoken');
 
-function login(req,res){
+/*-------------LOGIN USUARIO-------------*/
+function login(req, res) {
+
+    //datos a recibir
     let correo = req.body.correo;
     let clave = req.body.clave;
 
-    Usuario.findOne({correo})
-    .then(usuario => {
-        if(!usuario) return res.status(200).send({usuario});
-        bcrypt.compare(clave, usuario.clave).then(match => {
-            if(match){
-                //Acceso
-                payload = {
-                    //rut: usuario.rut,
-                    nombre: usuario.nombre,
-                    //apellido: usuario.apellido,
-                    //direccion: usuario.direccion,
-                    //correo: usuario.correo,
-                    //telefono: usuario.telefono,
-                    rol: usuario.rol//.nombre
+    //verificacion de datos recibidos
+    Usuario.findOne({ correo }).then(usuario => {
 
+
+        //si usuario no existe
+        if (!usuario) {
+            res.status(200).send({ message: 'USUARIO NO REGISTRADO' });
+        }
+
+        var token = jwt.sign({ id: usuario.id }, config.SECRET_TOKEN, {
+            expiresIn: 86400 // 24 hours
+        });
+
+        //comparamos clave
+        bcrypt.compare(clave, usuario.clave).then(match => {
+            if (match) {
+                payload = {
+                    rut: usuario.rut,
+                    nombre: usuario.nombre,
+                    correo: usuario.correo,
+                    role: usuario.role
                 }
-                jwt.sign(payload, CONFIG.SECRET_TOKEN, function(error, token){
-                    if(error){
-                        res.status(500).send({error});
-                    }else{
-                        res.status(200).send({message: 'ACCESO', token});
-                    }
-                })
-            }else{
-                res.status(200).send({message: 'PASSWORD INCORRECTA'});
+                jwt.sign(payload, config.SECRET_TOKEN,
+
+
+
+                    function (error, token) {
+                        if (error) {
+                            res.status(500).send({
+                                message: 'ERROR EN EL SERVIDOR'
+                            });
+                        } else {
+                            res.status(200).send({
+                                message: 'ACCESO AUTORIZADO',
+                                payload,
+                                token
+                            });
+                        }
+                    })
+            } else {
+                res.status(200).send({
+                    message: 'DATOS INCORRECTOS'
+                });
             }
         }).catch(error => {
             console.log(error);
-            res.status(400).send({error});
+            res.status(400).send({
+                message: 'ERROR EN EL SERVIDOR'
+            });
         });
     }).catch(error => {
         console.log(error);
-        res.status(400).send({error});
+        res.status(400).send({
+            message: 'ERROR EN EL SERVIDOR'
+        });
     });
 }
 
-module.exports = login;
+/*-------------REGISTRO USUARIO-------------*/
+function register(req, res) {
+    let usuario = new Usuario()
+    usuario.rut = req.body.rut
+    usuario.nombre = req.body.nombre
+    usuario.correo = req.body.correo
+    usuario.clave = req.body.clave
+    usuario.role = "618abf82b54c1b21885faed0"
+
+    usuario.save((err, usuariostore) => {
+        if (err) res.status(500).send(`Error base de datos> ${err}`)
+
+        res.status(200).send({ usuario: usuariostore })
+    })
+}
+
+module.exports = { login, register };

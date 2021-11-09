@@ -50,7 +50,7 @@ function editar(req,res){
 
 function borrar(req,res){
     let bodegaId = req.params.id
-   Bodega.findByIdAndRemove(bodegaId, (err, bodegaRemoved) => {
+    Bodega.findByIdAndRemove(bodegaId, (err, bodegaRemoved) => {
        if(err) return res.status(500).send({ 
            message: 'Error en el servidor' 
         });
@@ -64,7 +64,7 @@ function borrar(req,res){
                 message: 'No existe la bodega'
             });
         }
-   });
+    });
 }
 
 module.exports = {

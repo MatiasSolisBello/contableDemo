@@ -27,7 +27,7 @@ function buscar(req,res){
             message:'Error usuario no existe'
         })
         res.status(200).send({usuario})
-    })//.populate('role', ['nombre', 'descripcion'])
+    }).populate('role', ['nombre'])
 }
 
 /*-------------EDITAR USUARIO-------------*/
