@@ -2,31 +2,30 @@
 
 var express = require('express');
 var productoController = require('../controllers/productoController');
-const auth = require('../middlewares/autenticacion');
+const {verificaToken, verificaPersonal} = require('../middlewares/autenticacion');
 var api= express.Router();
 
 //Rutas
 api.post(
     '/producto', 
-    [auth.verificaToken],
+    [verificaToken, verificaPersonal],
     productoController.guardar
 )
 
 api.get(
     '/producto',
-    [auth.verificaToken],
     productoController.buscar
 )
 
 api.put(
     '/producto/:id',
-    [auth.verificaToken],
+    [verificaToken, verificaPersonal],
     productoController.editar
 )
 
 api.delete(
     '/producto/:id',
-    [auth.verificaToken],
+    [verificaToken, verificaPersonal],
     productoController.borrar
 )
 

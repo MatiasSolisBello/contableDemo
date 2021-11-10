@@ -6,7 +6,7 @@ var api= express.Router();
 
 api.post(
     '/usuario',
-    [verificaToken],
+    [verificaToken, verificaAdmin],
     usuarioController.guardar
 )
 
@@ -18,13 +18,13 @@ api.get(
 
 api.put(
     '/usuario/:id',
-    [verificaToken],
+    [verificaToken, verificaAdmin],
     usuarioController.editar
 )
 
 api.delete(
     '/usuario/:id',
-    [verificaToken],
+    [verificaToken, verificaAdmin],
     usuarioController.borrar
 )
 

@@ -5,20 +5,12 @@ const jwt = require('jsonwebtoken');
 
 /*-------------LOGIN USUARIO-------------*/
 function login(req, res) {
-
     //datos a recibir
     let correo = req.body.correo;
     let clave = req.body.clave;
 
     //verificacion de datos recibidos
     Usuario.findOne({ correo }).then(usuario => {
-
-
-        //si usuario no existe
-        if (!usuario) {
-            res.status(200).send({ message: 'USUARIO NO REGISTRADO' });
-        }
-
         var token = jwt.sign({ id: usuario.id }, config.SECRET_TOKEN, {
             expiresIn: 86400 // 24 hours
         });
@@ -32,14 +24,12 @@ function login(req, res) {
                     correo: usuario.correo,
                     role: usuario.role
                 }
+
                 jwt.sign(payload, config.SECRET_TOKEN,
-
-
-
                     function (error, token) {
                         if (error) {
                             res.status(500).send({
-                                message: 'ERROR EN EL SERVIDOR'
+                                message: 'ERROR EN EL SERVIDOR 01: ', error
                             });
                         } else {
                             res.status(200).send({
@@ -48,22 +38,22 @@ function login(req, res) {
                                 token
                             });
                         }
-                    })
-            } else {
+                    }
+                )
+            }else{
                 res.status(200).send({
-                    message: 'DATOS INCORRECTOS'
+                    message: 'DATOS INGRESADOS DE FORMA INCORRECTA'
                 });
             }
         }).catch(error => {
             console.log(error);
             res.status(400).send({
-                message: 'ERROR EN EL SERVIDOR'
+                message: 'ERROR EN EL SERVIDOR 02: ',error
             });
         });
     }).catch(error => {
-        console.log(error);
         res.status(400).send({
-            message: 'ERROR EN EL SERVIDOR'
+            message: 'DATOS INGRESADOS DE FORMA INCORRECTA'
         });
     });
 }

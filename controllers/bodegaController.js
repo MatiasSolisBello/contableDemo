@@ -23,7 +23,7 @@ function buscar(req,res){
             message:'Error bodega no existe'
         })
         res.status(200).send({bodega})
-    })//.populate('usuario', ['rut', 'nombre', 'apellido', 'correo', 'telefono'])
+    }).populate('usuario', ['rut', 'nombre'])
 }
 
 function editar(req,res){
