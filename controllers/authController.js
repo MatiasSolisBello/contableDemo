@@ -75,7 +75,6 @@ function register(req, res) {
     usuario.nombre = req.body.nombre
     usuario.correo = req.body.correo
     usuario.clave = req.body.clave
-    usuario.role = "618abf82b54c1b21885faed0"
 
     usuario.save((err, usuariostore) => {
         if (err) res.status(500).send(`Error base de datos> ${err}`)

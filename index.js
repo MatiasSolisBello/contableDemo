@@ -12,18 +12,20 @@ let url = 'mongodb+srv://admin:admin@contabledemo.gowqd.mongodb.net/myFirstDatab
 
 var bodega_routes= require('./routes/bodegaRoute');
 var usuario_routes = require('./routes/usuarioRoute');
-var rol_routes = require('./routes/rolRoute');
 var producto_routes = require('./routes/productoRoute');
 var auth_routes = require('./routes/authRoute');
 
-app.use(bodyParser.urlencoded({extended:false}))
-app.use(bodyParser.json())
+//const authToken = require("./middlewares/autenticacion")
+//app.use(authToken)
 
-//app.use(authToken);
+app.use(bodyParser.json()) 
+app.use(bodyParser.urlencoded({extended:false}))
+
+
+
 
 app.use('/api', bodega_routes);
 app.use('/api', usuario_routes);
-app.use('/api', rol_routes);
 app.use('/api', producto_routes);
 app.use('/api', auth_routes);
 

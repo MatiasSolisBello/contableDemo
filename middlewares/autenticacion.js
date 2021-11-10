@@ -8,57 +8,68 @@ let verificaToken = (req, res, next) => {
 
     //si token no existe
     if (!token) {
-        return res.status(403).send({ 
-            message: "Token no entregado" 
+        return res.status(403).send({
+            message: "Token no entregado"
         });
     }
 
     //verificar 
-    jwt.verify(token, config.SECRET_TOKEN ,(err, decoded) => {
+    jwt.verify(token, config.SECRET_TOKEN, (err, decoded) => {
         if (err) {
             //401: No autorizado
             return res.status(401).json({
                 message: 'Token no válido'
             });
         }
-        req.usuario = decoded.usuario;
+        //console.log('verificaToken: ', decoded);
+       
+        req.usuario = decoded;
         next();
     });
 };
 
 // Verificar Admin
 let verificaAdmin = (req, res, next) => {
-    let usuario = req.usuario;
+    const usuario = req.usuario;
     
-    if (usuario.role === "618a885eaf40e047ec8ab614") {
+    console.log('verificaAdmin: ',usuario.role);
+    
+    if (usuario.role === 'ADMIN_ROLE') {
         next();
     } else {
-        return res.json(401)({
-            message: 'El usuario no posee los permisos necesarios'
+        return res.json({
+            message: 'El usuario no es administrador'
         });
     }
 }
 
 // Verificar Bodega
 let verificaBodega = (req, res, next) => {
-    let usuario = req.usuario;
-    if (usuario.role === '618abf68b54c1b21885faece') {
+    const usuario = req.usuario;
+    
+    console.log('verificaBodega: ',usuario.role);
+    
+    if (usuario.role === 'BODEGA_ROLE') {
         next();
     } else {
-        return res.json(401)({
-            message: 'El usuario no posee los permisos necesarios'
+        return res.json({
+            message: 'El usuario no es administrador de Bodega'
         });
     }
+    
 }
 
 // Verificar Cliente
 let verificaCliente = (req, res, next) => {
-    let usuario = req.usuario;
-    if (usuario.role === '618abf82b54c1b21885faed0') {
+    const usuario = req.usuario;
+    
+    console.log('verificaCliente: ',usuario.role);
+    
+    if (usuario.role === 'CLIENTE_ROLE') {
         next();
     } else {
-        return res.json(401)({
-            message: 'El usuario no posee los permisos necesarios'
+        return res.json({
+            message: 'El usuario no es cliente'
         });
     }
 }

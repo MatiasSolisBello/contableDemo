@@ -3,12 +3,19 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
 
+//funcion con enum + message 
+let rolesValidos = {
+    values: ['ADMIN_ROLE', 'BODEGA_ROLE', 'CLIENTE_ROLE'],
+    message: '{VALUE} no es un rol válido'
+};
+
+
 const UsuarioSchema = Schema({
     rut: {type: String, unique:true, required:true},
     nombre: {type: String, required:true },
     correo: {type: String, required:true },
     clave: {type: String, required:true },
-    role: {type: Schema.ObjectId, ref: "role", required:true}
+    role: {type: String, default: 'CLIENTE_ROLE', enum: rolesValidos}
 })
 
 //------------------------------------------------------------

@@ -2,30 +2,30 @@
 
 const express = require('express');
 const bodegaController = require('../controllers/bodegaController');
-const auth = require('../middlewares/autenticacion');
+const {verificaToken, verificaBodega} = require('../middlewares/autenticacion');
 const api= express.Router();
 
 api.post(
     '/bodega',
-    [auth.verificaToken],
+    [verificaToken],
     bodegaController.guardar
 )
 
 api.get(
     '/bodega',
-    [auth.verificaToken],
+    [verificaToken, verificaBodega],
     bodegaController.buscar
 )
 
 api.put(
     '/bodega/:id',
-    [auth.verificaToken],
+    [verificaToken],
     bodegaController.editar
 )
 
 api.delete(
     '/bodega/:id',
-    [auth.verificaToken],
+    [verificaToken],
     bodegaController.borrar
 )
 
