@@ -1,0 +1,401 @@
+{
+	"info": {
+		"_postman_id": "93250fdc-d387-4de7-b720-71177a716df7",
+		"name": "ContableDemo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Usuario",
+			"item": [
+				{
+					"name": "POST Usuario",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": ".eyJydXQiOiIyMDA1ODk2OS02Iiwibm9tYnJlIjoiTWF0aWFzIFNvbGlzIiwiY29ycmVvIjoibWF0aWFzLnNvbGlzLmJlbGxvQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTl9ST0xFIiwiaWF0IjoxNjM2NTcwNTY4fQ.pH8HLJl8THOtKOMmQXDnBM461ji1LFsbZYqbY4Wnn9U",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"rut\": \"20111777-6\",\r\n    \"nombre\": \"Patricio Berrios\",\r\n    \"correo\": \"patr.berrios14@gmail.com\",\r\n    \"clave\": \"123\",\r\n    \"role\": \"BODEGA_ROLE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/usuario",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"usuario"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Usuario",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJydXQiOiIxMDIyNDg4OC0zIiwibm9tYnJlIjoiY2xpZW50ZTAyIiwiY29ycmVvIjoiY2xpZW50ZTAyQGVtYWlsLmNvbSIsInJvbCI6IkNMSUVOVEVfUk9MRSIsImlhdCI6MTYzNjU1MDA4Mn0.hIbBBrE3U6IzH9-gOjIoot7n6bJVhLfg6A0SxKdUSQY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"rut\": \"24444255-6\",\r\n    \"nombre\": \"adad2\",\r\n    \"correo\": \"adada2@email.com\",\r\n    \"clave\": \"123\",\r\n    \"rol\": \"BODEGA_ROLE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/usuario/618a8ef889b2564664ca0847",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"usuario",
+								"618a8ef889b2564664ca0847"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Usuario",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/usuario/618a8dcc5d984f2f8c770392",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"usuario",
+								"618a8dcc5d984f2f8c770392"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Usuario",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJydXQiOiIyMDA1ODk2OS02Iiwibm9tYnJlIjoiTWF0aWFzIFNvbGlzIiwiY29ycmVvIjoibWF0aWFzLnNvbGlzLmJlbGxvQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTl9ST0xFIiwiaWF0IjoxNjM2NTcwNTY4fQ.pH8HLJl8THOtKOMmQXDnBM461ji1LFsbZYqbY4Wnn9U",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/api/usuario",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"usuario"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Bodega",
+			"item": [
+				{
+					"name": "GET bodega",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJydXQiOiIyMDA1ODk2OS02Iiwibm9tYnJlIjoiTWF0aWFzIFNvbGlzIiwiY29ycmVvIjoibWF0aWFzLnNvbGlzLmJlbGxvQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTl9ST0xFIiwiaWF0IjoxNjM2NTcwNTY4fQ.pH8HLJl8THOtKOMmQXDnBM461ji1LFsbZYqbY4Wnn9U",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/api/bodega",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"bodega"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Bodega",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJydXQiOiIyMDA1ODk2OS02Iiwibm9tYnJlIjoiTWF0aWFzIFNvbGlzIiwiY29ycmVvIjoibWF0aWFzLnNvbGlzLmJlbGxvQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTl9ST0xFIiwiaWF0IjoxNjM2NTcwNTY4fQ.pH8HLJl8THOtKOMmQXDnBM461ji1LFsbZYqbY4Wnn9U",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"numero\": \"141\",\r\n    \"nombre\": \"Bodega Codigua\",\r\n    \"descripcion\": \"Bodega de cristal\",\r\n    \"estado\": \"Abierto\",\r\n    \"usuario\": \"618c1b7557ba2e1600a8aa13\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/bodega",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"bodega"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Producto",
+			"item": [
+				{
+					"name": "GET Producto",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/producto",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"producto"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Producto",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Marihuana Chilena\",\r\n    \"descripcion\": \"5 Kg.\",\r\n    \"precio\": 20000,\r\n    \"stock\": \"1200\",\r\n    \"imagen\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/producto/610ef826d48cf1299847bd4f",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"producto",
+								"610ef826d48cf1299847bd4f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Producto",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJydXQiOiIyMDA1ODk2OS02Iiwibm9tYnJlIjoiTWF0aWFzIFNvbGlzIiwiY29ycmVvIjoibWF0aWFzLnNvbGlzLmJlbGxvQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTl9ST0xFIiwiaWF0IjoxNjM2NTcwNTY4fQ.pH8HLJl8THOtKOMmQXDnBM461ji1LFsbZYqbY4Wnn9U",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Cristal Texano\",\r\n    \"descripcion\": \"2 gr.\",\r\n    \"precio\": 50000,\r\n    \"stock\": \"30000\",\r\n    \"imagen\": \"\",\r\n    \"bodega\": \"618abbe6ac6f793288e4d0c0\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/producto",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"producto"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Producto",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Coca colombiana\",\r\n    \"descripcion\": \"10 Kg.\",\r\n    \"precio\": 50000,\r\n    \"stock\": \"900\",\r\n    \"imagen\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/producto/60ccff49723aca5138361891",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"producto",
+								"60ccff49723aca5138361891"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"correo\": \"patr.berrios14@gmail.com\",\r\n    \"clave\": \"123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/login",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"rut\": \"10224888-3\",\r\n    \"nombre\": \"cliente01\",\r\n    \"correo\": \"cliente01@email.com\",\r\n    \"clave\": \"123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/register",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"register"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
