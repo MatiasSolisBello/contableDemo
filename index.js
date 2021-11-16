@@ -3,20 +3,22 @@ const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const app = express()
+
+
 const cors = require('cors')
 app.use(cors())
 
+const dotenv = require('dotenv');
+dotenv.config();
+
 global.__basedir = __dirname;
 
-let url = 'mongodb+srv://admin:admin@contabledemo.gowqd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+let url = process.env.ENV_LINK_BD;
 
 var bodega_routes= require('./routes/bodegaRoute');
 var usuario_routes = require('./routes/usuarioRoute');
 var producto_routes = require('./routes/productoRoute');
 var auth_routes = require('./routes/authRoute');
-
-//const authToken = require("./middlewares/autenticacion")
-//app.use(authToken)
 
 app.use(bodyParser.json()) 
 app.use(bodyParser.urlencoded({extended:false}))
@@ -36,7 +38,7 @@ mongoose.connect(url, {
     useUnifiedTopology: true,
     useCreateIndex: true,
     }, function(err,res){    
-    app.listen(5000, ()=>{
-        console.log("Esta corriendo en puerto 5000")
+    app.listen(process.env.ENV_PORT, ()=>{
+        console.log("Esta corriendo en puerto "+ process.env.ENV_PORT)
     })
 })

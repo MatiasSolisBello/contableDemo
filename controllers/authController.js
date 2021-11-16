@@ -1,6 +1,6 @@
 const Usuario = require('../modelos/usuario');
 const bcrypt = require('bcrypt');
-const config = require("../config/config")
+const dotenv =require('dotenv')
 const jwt = require('jsonwebtoken');
 
 /*-------------LOGIN USUARIO-------------*/
@@ -11,8 +11,8 @@ function login(req, res) {
 
     //verificacion de datos recibidos
     Usuario.findOne({ correo }).then(usuario => {
-        var token = jwt.sign({ id: usuario.id }, config.SECRET_TOKEN, {
-            expiresIn: 86400 // 24 hours
+        var token = jwt.sign({ id: usuario.id }, process.env.ENV_SECRET_TOKEN, {
+            expiresIn: precess.env.ENV_EXPIRE
         });
 
         //comparamos clave
@@ -25,7 +25,7 @@ function login(req, res) {
                     role: usuario.role
                 }
 
-                jwt.sign(payload, config.SECRET_TOKEN,
+                jwt.sign(payload, process.env.ENV_SECRET_TOKEN,
                     function (error, token) {
                         if (error) {
                             res.status(500).send({

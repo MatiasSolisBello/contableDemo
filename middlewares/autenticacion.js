@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const config = require("../config/config")
+const dotenv = require("dotenv")
 
 //------------------------------
 // Verificar Token
@@ -13,7 +13,7 @@ let verificaToken = (req, res, next) => {
         });
     }
 
-    jwt.verify(token, config.SECRET_TOKEN, (err, decoded) => {
+    jwt.verify(token, process.env.ENV_SECRET_TOKEN, (err, decoded) => {
         if (err) {
             return res.status(401).json({
                 message: 'Token no válido'

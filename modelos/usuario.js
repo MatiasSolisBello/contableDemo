@@ -11,9 +11,9 @@ let rolesValidos = {
 
 
 const UsuarioSchema = Schema({
-    rut: {type: String, unique:true, required:true},
+    rut: {type: String, unique:[true, 'Rut debe ser unico'], required:true},
     nombre: {type: String, required:true },
-    correo: {type: String, required:true },
+    correo: {type: String, unique:[true, 'correo debe ser unico'], required:true },
     clave: {type: String, required:true },
     role: {type: String, default: 'CLIENTE_ROLE', enum: rolesValidos}
 })
