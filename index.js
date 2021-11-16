@@ -8,8 +8,7 @@ const app = express()
 const cors = require('cors')
 app.use(cors())
 
-const dotenv = require('dotenv');
-dotenv.config();
+require('dotenv').config();
 
 global.__basedir = __dirname;
 
