@@ -2,34 +2,38 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
-const app = express()
-
-
 const cors = require('cors')
-app.use(cors())
+const dotenv = require("dotenv");
 
-require('dotenv').config();
 
-global.__basedir = __dirname;
-
-let url = process.env.ENV_LINK_BD;
-
+//Importamos las rutas
 var bodega_routes= require('./routes/bodegaRoute');
 var usuario_routes = require('./routes/usuarioRoute');
 var producto_routes = require('./routes/productoRoute');
 var auth_routes = require('./routes/authRoute');
 
-app.use(bodyParser.json()) 
-app.use(bodyParser.urlencoded({extended:false}))
+//Creamos la global.__basedir para la carga masiva
+global.__basedir = __dirname;
 
+//Inicializamos la app con express
+const app = express();
 
+//Inicializamos dotenv para usar las variables de entorno del .env
+dotenv.config();
 
+//Configuraciones iniciales
+app.use(bodyParser.json({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
+//Definimos las rutas siempre después de activar cors
 app.use('/api', bodega_routes);
 app.use('/api', usuario_routes);
 app.use('/api', producto_routes);
 app.use('/api', auth_routes);
 
+//Traemos la cadena conexión de MongoDB del .env
+let url = process.env.ENV_LINK_BD;
 
 // CONEXION A BASE DE DATOS
 mongoose.connect(url, {
