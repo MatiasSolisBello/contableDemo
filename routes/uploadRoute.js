@@ -75,12 +75,15 @@ function imagenProducto(id, res, nombre){
 
         //imagen esta en modelo
         productoDB.imagen = nombre;
-        console.log(productoDB);
+        //console.log(productoDB);
 
         productoDB.save((err, productoGuardado) => {
+            if(err) return res.status(500).send({ 
+                message: 'Error en el servidor',
+                err
+             });
             res.status(200).send({
                 producto: productoGuardado
-                //imagen: nombre
             });
         });
     });
