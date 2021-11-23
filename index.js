@@ -45,3 +45,5 @@ mongoose.connect(url, {
         console.log("Esta corriendo en puerto "+ process.env.ENV_PORT)
     })
 })
+
+module.exports = app;
