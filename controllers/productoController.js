@@ -1,76 +1,87 @@
 'use strict'
-var Producto = require('../modelos/producto.js')
+const Producto = require('../models/producto.js')
 
-//Creamos un método en el controlador
-function guardar(req,res) {
-    let producto = new Producto()
-    producto.nombre = req.body.nombre
-    producto.descripcion = req.body.descripcion
-    producto.precio = req.body.precio
-    producto.stock = req.body.stock
-    producto.imagen= req.body.imagen
-    producto.bodega= req.body.bodega
-
-    producto.save((err,productostore) => {
-        if (err) res.status(500).send(`Error base de datos> ${err}`)
-        res.status(200).send({producto:productostore})
-    })
+/*-------------GUARDAR PRODUCTO-------------*/
+const guardar = async (req, res) => {
+    const producto = req.body;
+    const newProducto = new Producto(producto);
+    try {
+        await newProducto.save();
+        res.status(201).json(newProducto);
+    } catch (error) {
+        res.status(409).json({ mensaje: error });
+    }
 
 }
 
-function buscar(req,res){
-    Producto.find({}, (err,producto) => {
-        if(!producto) return res.status(404).send({
-            message:'Error producto no existe'
-        })
-        res.status(200).send({producto})
-    })
+/*-------------BUSCAR PRODUCTO-------------*/
+const buscar = async (req, res) => {
+    try {
+        const producto = await Producto.find()
+        .populate('bodega', ['nombre', 'direccion']);
+        res.status(200).json(producto);
+    } catch (error) {
+        res.status(404).json({ mensaje: error });
+    }
 }
 
-function editar(req,res){
-    let productoId = req.params.id
-    let update = req.body
-    Producto.findByIdAndUpdate(productoId, update,{
-        new:true},(err, productoupdated) =>{
-        if(err) return res.status(500).send({
-            message: 'Error en el servidor'
+/*-------------BUSCAR PRODUCTO POR ID-------------*/
+const buscarPorId = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const producto = await Producto.findById(id)
+        .populate('bodega', ['nombre', 'direccion']);
+        if (producto == null)
+            return res.status(404).json({
+                mensaje: 'No existe un Producto con ese Id.'
+            })
+        res.status(200).json(producto);
+    } catch (error) {
+        res.status(404).json({ mensaje: error });
+    }
+
+}
+
+/*-------------EDITAR PRODUCTO-------------*/
+const editar = async (req, res) => {
+    const id = req.params.id;
+    const producto = req.body;
+    try {
+        await Producto.findByIdAndUpdate(id, producto);
+        const productoActualizado = await Producto.findById(id);
+        if (productoActualizado == null)
+            return res.status(404).json({
+                mensaje: 'No existe un Producto con ese Id.'
+            })
+        res.status(200).json(productoActualizado);
+    } catch (error) {
+        res.status(500).json({ mensaje: 'Error en el servidor' });
+    }
+
+}
+
+/*-------------BORRAR PRODUCTO-------------*/
+const borrar = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const producto = await Producto.findById(id);
+        if (producto == null)
+            return res.status(404).json({
+                mensaje: 'No existe un Producto con ese Id.'
+            })
+        await Producto.findByIdAndDelete(id);
+        res.status(200).json("El Producto ha sido eliminado con éxito");
+    } catch (error) {
+        res.status(500).json({
+            mensaje: 'Error en el servidor'
         });
-         
-        if(productoupdated){
-            return res.status(200).send({
-                producto:productoupdated
-            });
-        }else{
-            return res.status(404).send({
-                message: 'No existe el producto'
-            });
-        }
-         
-    });
-
-}
-
-function borrar(req,res){
-    let productoId = req.params.id
-    Producto.findByIdAndRemove(productoId, (err, productoRemoved) => {
-        if(err) return res.status(500).send({ 
-            message: 'Error en el servidor'
-        });
-        if(productoRemoved){
-            return res.status(200).send({
-                producto: productoRemoved
-            });
-        }else{
-            return res.status(404).send({
-                message: 'No existe el producto'
-            });
-        }  
-   });
+    }
 }
 
 module.exports = {
     guardar,
     buscar,
+    buscarPorId,
     editar,
     borrar
 };

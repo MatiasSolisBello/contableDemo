@@ -1,84 +1,91 @@
 'use strict'
-var Usuario = require('../modelos/usuario')
+var Usuario = require('../models/usuario')
 
 /*-------------GUARDAR USUARIO-------------*/
-function guardar(req,res) {
-
-    //devolvemos respuesta en json
-    let usuario = new Usuario()
-    usuario.rut = req.body.rut
-    usuario.nombre = req.body.nombre
-    usuario.correo = req.body.correo
-    usuario.clave = req.body.clave
-    usuario.role = req.body.role
-
-    usuario.save((err,usuariostore) => {
-        if (err) res.status(500).send(`Error base de datos> ${err}`)
-
-        res.status(200).send({usuario:usuariostore})
-    })
+const guardar = async (req, res) => {
+    const usuario = req.body;
+    const newUsuario = new Usuario(usuario);
+    try {
+        await newUsuario.save();
+        res.status(201).json(newUsuario);
+    } catch (error) {
+        res.status(409).json({ mensaje: error });
+    }
 }
 
 /*-------------BUSCAR USUARIO-------------*/
-function buscar(req,res){
-    Usuario.find({}, (err,usuario) => {
-        if(!usuario) 
-        return res.status(404).send({
-            message:'Error usuario no existe'
+const buscar = async (req, res) => {
+    try {
+        const usuario = await Usuario.find({},'-clave')
+        res.status(200).json(usuario);
+    } catch (error) {
+        res.status(404).json({ 
+            mensaje: error 
+        });
+    }
+}
+
+/*-------------BUSCAR USUARIO POR ID-------------*/
+const buscarPorId = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const usuario = await Usuario.findById(id, '-clave')
+        if(usuario == null) 
+        return res.status(404).json({
+            mensaje: 'No existe una Usuario con ese Id.'
         })
-        res.status(200).send({usuario})
-    })
+        res.status(200).json(usuario);        
+    } catch (error) {
+        res.status(500).json({ 
+            mensaje: 'Error en el servidor' 
+        });
+    }
 }
 
 /*-------------EDITAR USUARIO-------------*/
-function editar(req,res){
-    var usuarioId = req.params.id;
-    var update = req.body;
-
-    Usuario.findByIdAndUpdate(usuarioId, update,
-    {new:true},(err, usuarioupdated) =>{
-        if(err) return res.status(500).send({
-            message: 'Error en el servidor, debes cambiar tu clave'
+const editar= async (req, res) => {
+    const id = req.params.id;
+    const usuario = req.body;
+    try {
+        await Usuario.findByIdAndUpdate(id, usuario);
+        const usuarioActualizada = await Usuario.findById(id);
+        if(usuarioActualizada == null) 
+            return res.status(404).json({ 
+                mensaje: 'No existe una Usuario con ese Id.' 
+            })
+        res.status(200).json(usuarioActualizada);
+    } catch (error) {
+        res.status(500).json({ 
+            mensaje: 'Error en el servidor' 
         });
-        if(usuarioupdated){
-            return res.status(200).send({
-                usuario:usuarioupdated
-            });
-        }else{
-            return res.status(404).send({
-                message: 'No existe el usuario'
-            });
-        }
-         
-    });
+    }
 
 }
 
 /*-------------ELIMINAR USUARIO-------------*/
-function borrar(req,res){
-     let usuarioId = req.params.id
-    Usuario.findByIdAndRemove(usuarioId, (err, usuarioRemoved) => {
-        if(err) return res.status(500).send({ 
-            message: 'Error en el servidor' 
+const borrar= async (req, res) => {
+    const id = req.params.id;
+    try {
+        const usuario = await Usuario.findById(id);
+        if(usuario == null) return res.status(404).json({
+            mensaje: 'No existe una Usuario con ese Id.' 
+        })
+        await Usuario.findByIdAndDelete(id);
+        res.status(200).json({ 
+            mensaje: 'La Usuario ha sido eliminada con éxito' 
         });
-         
-            if(usuarioRemoved){
-                return res.status(200).send({
-                    usuario: usuarioRemoved
-                });
-            }else{
-                return res.status(404).send({
-                    message: 'No existe el usuario'
-                });
-            }
-         
-    });
+    } catch (error) {
+        res.status(500).json({ 
+            mensaje: 'Error en el servidor' 
+        });
+    }
 
 }
 
 module.exports = {
     guardar,
     buscar, 
+    buscarPorId,
     editar,
     borrar  
 };

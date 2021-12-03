@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/api.test.js --exit"
+    "test": "mocha test/api.test.js --exit",
+    "start": "npx nodemon"
   },
   "author": "nv",
   "license": "ISC",

@@ -1,5 +1,4 @@
 'use strict'
-
 const express = require('express');
 const bodegaController = require('../controllers/bodegaController');
 const {verificaToken, verificaPersonal} = require('../middlewares/autenticacion');
@@ -15,6 +14,12 @@ api.get(
     '/bodega',
     [verificaToken, verificaPersonal],
     bodegaController.buscar
+)
+
+api.get(
+    '/bodega/:id',
+    [verificaToken, verificaPersonal],
+    bodegaController.buscarPorId
 )
 
 api.put(

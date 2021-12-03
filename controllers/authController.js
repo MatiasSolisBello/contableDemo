@@ -1,4 +1,4 @@
-const Usuario = require('../modelos/usuario');
+const Usuario = require('../models/usuario');
 const bcrypt = require('bcrypt');
 const dotenv =require('dotenv')
 const jwt = require('jsonwebtoken');
@@ -59,18 +59,15 @@ function login(req, res) {
 }
 
 /*-------------REGISTRO USUARIO-------------*/
-function register(req, res) {
-    let usuario = new Usuario()
-    usuario.rut = req.body.rut
-    usuario.nombre = req.body.nombre
-    usuario.correo = req.body.correo
-    usuario.clave = req.body.clave
-
-    usuario.save((err, usuariostore) => {
-        if (err) res.status(500).send(`Error base de datos> ${err}`)
-
-        res.status(200).send({ usuario: usuariostore })
-    })
+const register = async (req, res) => {
+    const usuario = req.body;
+    const newUsuario = new Usuario(usuario);
+    try {
+        await newUsuario.save();
+        res.status(201).json(newUsuario);
+    } catch (error) {
+        res.status(409).json({ mensaje: error });
+    }
 }
 
 module.exports = { login, register };

@@ -1,75 +1,86 @@
 'use strict'
-var Bodega = require('../modelos/bodega.js')
+const Bodega = require('../models/bodega.js')
 
-
-function guardar(req,res) {
-    let bodega = new Bodega()
-    bodega.numero = req.body.numero
-    bodega.nombre = req.body.nombre
-    bodega.direccion = req.body.direccion
-    bodega.descripcion = req.body.descripcion
-    bodega.estado = req.body.estado
-    bodega.usuario = req.body.usuario
-    bodega.save((err,bodegastore) => {
-        if (err) res.status(500).send(`Error base de datos> ${err}`)
-        res.status(200).send({bodega:bodegastore})
-    })
+/*-------------BUSCAR BODEGA-------------*/
+const buscar = async (req, res) => {
+    try {
+        const bodega = await Bodega.find()
+        .populate('usuario', ['nombre', 'role']);
+        res.status(200).json(bodega);
+    } catch (error) {
+        res.status(404).json({ mensaje: error });
+    }
 
 }
 
-function buscar(req,res){
-    Bodega.find({}, (err,bodega) => {
-        if(!bodega) return res.status(404).send({
-            message:'Error bodega no existe'
-        })
-        res.status(200).send({bodega})
-    }).populate('usuario', ['rut', 'nombre'])
+/*-------------BUSCAR BODEGA POR ID-------------*/
+const buscarPorId = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const bodega = await Bodega.findById(id)
+        .populate('usuario', ['nombre', 'role']);
+        if (bodega == null) 
+            return res.status(404).json({ 
+                mensaje: 'No existe una Bodega con ese Id.'
+            })
+        res.status(200).json(bodega);
+    } catch (error) {
+        res.status(500).json({ mensaje: 'Error en el servidor' });
+    }
 }
 
-function editar(req,res){
-    let bodegaId = req.params.id
-    let update = req.body
-    Bodega.findByIdAndUpdate(bodegaId, update,{new:true},(err, bodegaupdated) =>{
-        if(err) return res.status(500).send({
-            message: 'Error en el servidor'
+/*-------------GUARDAR BODEGA-------------*/
+const guardar = async (req, res) => {
+    const bodega = req.body;
+    const newBodega = new Bodega(bodega);
+    try {
+        await newBodega.save();
+        res.status(201).json(newBodega);
+    } catch (error) {
+        res.status(409).json({ mensaje: error });
+    }
+}
+
+/*-------------EDITAR BODEGA-------------*/
+const editar = async (req, res) => {
+    const id = req.params.id;
+    const bodega = req.body;
+    try {
+        await Bodega.findByIdAndUpdate(id, bodega);
+        const bodegaActualizada = await Bodega.findById(id);
+        if(bodegaActualizada == null) 
+            return res.status(404).json({ 
+                mensaje: 'No existe una Bodega con ese Id.' 
+            })
+        res.status(200).json(bodegaActualizada);
+    } catch (error) {
+        res.status(500).json({ mensaje: 'Error en el servidor' });
+    }
+
+}
+
+/*-------------BORRAR BODEGA-------------*/
+const borrar= async (req, res) => {
+    const id = req.params.id;
+    try {
+        const bodega = await Bodega.findById(id);
+        if(bodega == null) 
+            return res.status(404).json({ 
+                mensaje: 'No existe una Bodega con ese Id.' 
+            })
+        await Bodega.findByIdAndDelete(id);
+        res.status(200).json({ 
+            mensaje: 'La Bodega ha sido eliminada con éxito' 
         });
-         
-        if(bodegaupdated){
-            return res.status(200).send({
-                bodega:bodegaupdated
-            });
-        }else{
-            return res.status(404).send({
-                message: 'No existe la bodega'
-            });
-        }
-         
-    });
-
-}
-
-function borrar(req,res){
-    let bodegaId = req.params.id
-    Bodega.findByIdAndRemove(bodegaId, (err, bodegaRemoved) => {
-       if(err) return res.status(500).send({ 
-           message: 'Error en el servidor' 
-        });
-        
-        if(bodegaRemoved){
-            return res.status(200).send({
-                bodega: bodegaRemoved
-            });
-        }else{
-            return res.status(404).send({
-                message: 'No existe la bodega'
-            });
-        }
-    });
+    } catch (error) {
+        res.status(500).json({ mensaje: 'Error en el servidor' });
+    }
 }
 
 module.exports = {
     guardar,
     buscar,
+    buscarPorId,
     editar,
-    borrar  
+    borrar
 };

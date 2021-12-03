@@ -17,6 +17,11 @@ api.get(
     productoController.buscar
 )
 
+api.get(
+    '/producto/:id',
+    productoController.buscar
+)
+
 api.put(
     '/producto/:id',
     [verificaToken, verificaPersonal],

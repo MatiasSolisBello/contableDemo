@@ -5,7 +5,7 @@ const fileUpload = require('express-fileupload')
 
 const app = express();
 
-const Producto = require('../modelos/producto')
+const Producto = require('../models/producto')
 
 app.use( fileUpload({ useTempFiles: true }) );
 
