@@ -1,13 +1,20 @@
 'use strict'
 const Producto = require('../models/producto.js')
+const fs = require('fs-extra');
+const path = require('path')
+
 
 /*-------------GUARDAR PRODUCTO-------------*/
 const guardar = async (req, res) => {
     const producto = req.body;
-    const newProducto = new Producto(producto);
+    const newProducto = { producto, imagen: req.file.path };
+    const product = new Producto(newProducto);
     try {
-        await newProducto.save();
-        res.status(201).json(newProducto);
+        await product.save();
+        res.status(201).json({
+            message: 'Producto guardado',
+            newProducto
+        });
     } catch (error) {
         res.status(409).json({ mensaje: error });
     }
@@ -47,13 +54,15 @@ const editar = async (req, res) => {
     const id = req.params.id;
     const producto = req.body;
     try {
-        await Producto.findByIdAndUpdate(id, producto);
-        const productoActualizado = await Producto.findById(id);
+        const productoActualizado = await Producto.findByIdAndUpdate(id, producto);
         if (productoActualizado == null)
             return res.status(404).json({
                 mensaje: 'No existe un Producto con ese Id.'
             })
-        res.status(200).json(productoActualizado);
+        res.status(200).json({
+            message: 'Producto actualizado',
+            productoActualizado
+        });
     } catch (error) {
         res.status(500).json({ mensaje: 'Error en el servidor' });
     }
@@ -62,18 +71,24 @@ const editar = async (req, res) => {
 
 /*-------------BORRAR PRODUCTO-------------*/
 const borrar = async (req, res) => {
+
+    //obtenemos el id
     const id = req.params.id;
+
     try {
-        const producto = await Producto.findById(id);
-        if (producto == null)
+        const producto = await Producto.fifindByIdAndRemovendById(id);
+        if (producto == null){
             return res.status(404).json({
                 mensaje: 'No existe un Producto con ese Id.'
             })
-        await Producto.findByIdAndDelete(id);
-        res.status(200).json("El Producto ha sido eliminado con éxito");
+        }
+        
+        await fs.unlink(path.resolve(photo.imagen));
+        res.status(200).json("El producto ha sido eliminado con éxito");
     } catch (error) {
         res.status(500).json({
-            mensaje: 'Error en el servidor'
+            mensaje: 'Error en el servidor',
+            error
         });
     }
 }

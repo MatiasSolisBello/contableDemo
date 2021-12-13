@@ -1,14 +1,18 @@
 'use strict'
 
-var express = require('express');
-var productoController = require('../controllers/productoController');
+const express = require('express');
+
+const productoController = require('../controllers/productoController');
 const {verificaToken, verificaPersonal} = require('../middlewares/autenticacion');
-var api= express.Router();
+const upload = require('../libs/multer');
+
+const api= express.Router();
 
 //Rutas
 api.post(
     '/producto', 
     [verificaToken, verificaPersonal],
+    upload.single('image'),
     productoController.guardar
 )
 
