@@ -6,10 +6,17 @@ const path = require('path')
 
 /*-------------GUARDAR PRODUCTO-------------*/
 const guardar = async (req, res) => {
-    const producto = req.body;
-    const newProducto = { producto, imagen: req.file.path };
-    const product = new Producto(newProducto);
+    const { nombre, descripcion, precio, stock, bodega } = req.body;
+
+    const newProducto = {
+        nombre, descripcion, precio, stock, bodega,
+        imagen: req.file.path
+    };
+
+    /*console.log('guardar01: ', newProducto)*/
+
     try {
+        const product = new Producto(newProducto);
         await product.save();
         res.status(201).json({
             message: 'Producto guardado',
@@ -25,7 +32,7 @@ const guardar = async (req, res) => {
 const buscar = async (req, res) => {
     try {
         const producto = await Producto.find()
-        .populate('bodega', ['nombre', 'direccion']);
+            .populate('bodega', ['nombre', 'direccion']);
         res.status(200).json(producto);
     } catch (error) {
         res.status(404).json({ mensaje: error });
@@ -37,7 +44,7 @@ const buscarPorId = async (req, res) => {
     const id = req.params.id;
     try {
         const producto = await Producto.findById(id)
-        .populate('bodega', ['nombre', 'direccion']);
+            .populate('bodega', ['nombre', 'direccion']);
         if (producto == null)
             return res.status(404).json({
                 mensaje: 'No existe un Producto con ese Id.'
@@ -71,20 +78,28 @@ const editar = async (req, res) => {
 
 /*-------------BORRAR PRODUCTO-------------*/
 const borrar = async (req, res) => {
+    const { id } = req.params;
 
-    //obtenemos el id
-    const id = req.params.id;
+    //console.log('---Borrar: ', { id });
 
     try {
-        const producto = await Producto.fifindByIdAndRemovendById(id);
-        if (producto == null){
-            return res.status(404).json({
-                mensaje: 'No existe un Producto con ese Id.'
-            })
+        const producto = await Producto.findByIdAndDelete(id)
+        //console.log('---Borrar: ', producto);
+
+        //si producto es nulo
+        if (producto == null) ({
+            mensaje: 'No existe un producto con ese Id.'
+        })
+
+        //si producto existe
+        if (producto) {
+            await fs.unlink(path.resolve(producto.imagen));
+            //console.log('---Borrar: ', producto.imagen)
         }
-        
-        await fs.unlink(path.resolve(photo.imagen));
-        res.status(200).json("El producto ha sido eliminado con éxito");
+        return res.json({ 
+            message: 'Producto con id: ' + id + ' eliminado' 
+        });
+
     } catch (error) {
         res.status(500).json({
             mensaje: 'Error en el servidor',

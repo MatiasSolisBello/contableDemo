@@ -12,7 +12,7 @@ const api= express.Router();
 api.post(
     '/producto', 
     [verificaToken, verificaPersonal],
-    upload.single('image'),
+    upload.single('imagen'),
     productoController.guardar
 )
 

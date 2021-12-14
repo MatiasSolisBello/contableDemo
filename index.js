@@ -42,6 +42,7 @@ let url = process.env.ENV_LINK_BD;
 // CONEXION A BASE DE DATOS
 mongoose.connect(url, {
     useNewUrlParser:true,
+    useFindAndModify: false,
     useUnifiedTopology: true,
     useCreateIndex: true,
     }, function(err,res){    
