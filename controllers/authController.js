@@ -1,6 +1,6 @@
 const Usuario = require('../models/usuario');
 const bcrypt = require('bcrypt');
-const dotenv =require('dotenv')
+const dotenv = require('dotenv')
 const jwt = require('jsonwebtoken');
 
 /*-------------LOGIN USUARIO-------------*/
@@ -9,19 +9,23 @@ function login(req, res) {
     let correo = req.body.correo;
     let clave = req.body.clave;
 
+    //console.log(correo, clave);
+
     //verificacion de datos recibidos
     Usuario.findOne({ correo }).then(usuario => {
-        var token = jwt.sign({ id: usuario.id }, process.env.ENV_SECRET_TOKEN, {
-            expiresIn: precess.env.ENV_EXPIRE
-        });
+        var token = jwt.sign(
+            { id: usuario.id },
+            process.env.ENV_SECRET_TOKEN,
+            { expiresIn: process.env.ENV_EXPIRE }
+        );
+
+        console.log('Login: ', expiresIn)
 
         //comparamos clave
         bcrypt.compare(clave, usuario.clave).then(match => {
             if (match) {
                 payload = {
-                    rut: usuario.rut,
                     nombre: usuario.nombre,
-                    correo: usuario.correo,
                     role: usuario.role
                 }
 
@@ -40,7 +44,7 @@ function login(req, res) {
                         }
                     }
                 )
-            }else{
+            } else {
                 res.status(200).send({
                     message: 'DATOS INGRESADOS DE FORMA INCORRECTA'
                 });
@@ -48,7 +52,7 @@ function login(req, res) {
         }).catch(error => {
             console.log(error);
             res.status(400).send({
-                message: 'ERROR EN EL SERVIDOR 02: ',error
+                message: 'ERROR EN EL SERVIDOR 02: ', error
             });
         });
     }).catch(error => {
@@ -70,4 +74,11 @@ const register = async (req, res) => {
     }
 }
 
-module.exports = { login, register };
+
+/*-------------REFRESH TOKEN-------------*/
+function logout(req, res) {
+    const refreshToken = req.body.token;
+    refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
+    res.status(200).json("You logged out successfully.");
+}
+module.exports = { login, register, logout };
