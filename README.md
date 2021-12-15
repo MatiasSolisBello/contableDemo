@@ -4,7 +4,8 @@ Experiment made with Node.js / Express / MongoDB
 
 
 ## For execute this project, you need: 
-+ Execute "npx nodemon"
++ Execute "npm install" or "npm i"
++ Execute "npm start"
 + Import postman file
 
 ## Login: 
@@ -23,9 +24,10 @@ Experiment made with Node.js / Express / MongoDB
 
 ## This project include:
 - [x] CRUD different tables
-- [x] Login for role
+- [x] Login and check role
 - [x] Full password encryption
+- [x] Image of products
 
 ## Possible future improvements
-- [ ] Image of products
 - [ ] Login with Google account
+- [ ] Forgot Password
