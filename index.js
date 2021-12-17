@@ -8,10 +8,11 @@ const path = require('path');
 
 
 //Importamos las rutas
-var bodega_routes= require('./routes/bodegaRoute');
-var usuario_routes = require('./routes/usuarioRoute');
-var producto_routes = require('./routes/productoRoute');
-var auth_routes = require('./routes/authRoute');
+const bodega_routes= require('./routes/bodegaRoute');
+const usuario_routes = require('./routes/usuarioRoute');
+const producto_routes = require('./routes/productoRoute');
+const auth_routes = require('./routes/authRoute');
+const payment_routes = require('./routes/paymentRoute');
 
 //Creamos la global.__basedir para la carga masiva
 global.__basedir = __dirname;
@@ -32,6 +33,7 @@ app.use('/api', bodega_routes);
 app.use('/api', usuario_routes);
 app.use('/api', producto_routes);
 app.use('/api', auth_routes);
+app.use('/api', payment_routes);
 
 //carpeta uploads
 app.use('/uploads', express.static(path.resolve('uploads')));
