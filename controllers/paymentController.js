@@ -1,5 +1,6 @@
 'use strict'
 const Producto = require('../models/producto');
+const axios = require("axios");
 
 /*-----------CREAR ORDEN-----------*/
 const createOrder = async (req, res) => {
@@ -13,7 +14,7 @@ const createOrder = async (req, res) => {
             })
         }
 
-        //console.log('createOrder: ', producto);
+        console.log('createOrder: ', producto);
 
         const order = {
             intent: "CAPTURE",
@@ -27,19 +28,18 @@ const createOrder = async (req, res) => {
                 },
             ],
 
-            /*
+            
             application_context: {
-                brand_name: "mycompany.com",
+                brand_name: "contabledemo.com",
                 landing_page: "NO_PREFERENCE",
                 user_action: "PAY_NOW",
-                return_url: `${HOST}/capture-order`,
-                cancel_url: `${HOST}/cancel-payment`,
-            },*/
+                return_url: `${process.env.HOST}/capture-order`,
+                cancel_url: `${process.env.HOST}/cancel-payment`,
+            },
         };
 
-        res.status(200).json(order);
+        console.log('ORDEN:',order);
 
-        /*
         // format the body
         const params = new URLSearchParams();
         params.append("grant_type", "client_credentials");
@@ -55,20 +55,19 @@ const createOrder = async (req, res) => {
                     "Content-Type": "application/x-www-form-urlencoded",
                 },
                 auth: {
-                    username: PAYPAL_API_CLIENT,
-                    password: PAYPAL_API_SECRET,
+                    username: process.env.PAYPAL_API_CLIENT,
+                    password: process.env.PAYPAL_API_SECRET,
                 },
             }
         );
 
-        console.log(access_token);
+        console.log('TOKEN: ', access_token);
 
         // make a request
         const response = await axios.post(
-            `${PAYPAL_API}/v2/checkout/orders`,
-            order,
+            `${process.env.PAYPAL_API}/v2/checkout/orders`, order,
             {
-                headers: {
+                headers: { 
                     Authorization: `Bearer ${access_token}`,
                 },
             }
@@ -76,7 +75,7 @@ const createOrder = async (req, res) => {
 
         console.log(response.data);
 
-        return res.json(response.data);*/
+        return res.json(response.data);
 
     } catch (error) {
         console.log(error.message);
@@ -90,17 +89,17 @@ const captureOrder = async (req, res) => {
     const { token } = req.query;
     console.log(token);
 
-    /*try {
+    try {
         const response = await axios.post(
-            `${PAYPAL_API}/v2/checkout/orders/${token}/capture`,
+            `${process.env.PAYPAL_API}/v2/checkout/orders/${token}/capture`,
             {},
             {
                 auth: {
-                    username: PAYPAL_API_CLIENT,
-                    password: PAYPAL_API_SECRET,
+                    username: process.env.PAYPAL_API_CLIENT,
+                    password: process.env.PAYPAL_API_SECRET,
                 },
             }
-        );
+        ); 
 
         console.log(response.data);
 
@@ -108,7 +107,7 @@ const captureOrder = async (req, res) => {
     } catch (error) {
         console.log(error.message);
         return res.status(500).json({ message: "Internal Server error" });
-    }*/
+    }
 
 };
 
