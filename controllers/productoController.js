@@ -60,6 +60,9 @@ const buscarPorId = async (req, res) => {
 const editar = async (req, res) => {
     const id = req.params.id;
     const producto = req.body;
+
+    console.log('---Actualizar: ', id );
+
     try {
         const productoActualizado = await Producto.findByIdAndUpdate(id, producto);
         if (productoActualizado == null)

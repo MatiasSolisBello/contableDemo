@@ -23,7 +23,7 @@ api.get(
 
 api.get(
     '/producto/:id',
-    productoController.buscar
+    productoController.buscarPorId
 )
 
 api.put(

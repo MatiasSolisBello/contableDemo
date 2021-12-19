@@ -14,7 +14,7 @@ const createOrder = async (req, res) => {
             })
         }
 
-        console.log('createOrder: ', producto);
+        //console.log('createOrder: ', producto);
 
         const order = {
             intent: "CAPTURE",
@@ -28,7 +28,7 @@ const createOrder = async (req, res) => {
                 },
             ],
 
-            
+
             application_context: {
                 brand_name: "contabledemo.com",
                 landing_page: "NO_PREFERENCE",
@@ -38,7 +38,7 @@ const createOrder = async (req, res) => {
             },
         };
 
-        console.log('ORDEN:',order);
+        console.log('ORDEN:', order.application_context);
 
         // format the body
         const params = new URLSearchParams();
@@ -61,19 +61,19 @@ const createOrder = async (req, res) => {
             }
         );
 
-        console.log('TOKEN: ', access_token);
+        //console.log('TOKEN: ', access_token);
 
         // make a request
         const response = await axios.post(
             `${process.env.PAYPAL_API}/v2/checkout/orders`, order,
             {
-                headers: { 
+                headers: {
                     Authorization: `Bearer ${access_token}`,
                 },
             }
         );
 
-        console.log(response.data);
+        //console.log(response.data);
 
         return res.json(response.data);
 
@@ -87,6 +87,7 @@ const createOrder = async (req, res) => {
 /*-----------CAPTURAR PAGO-----------*/
 const captureOrder = async (req, res) => {
     const { token } = req.query;
+
     console.log(token);
 
     try {
@@ -106,7 +107,7 @@ const captureOrder = async (req, res) => {
         res.redirect("/payed.html");
     } catch (error) {
         console.log(error.message);
-        return res.status(500).json({ message: "Internal Server error" });
+        return res.status(500).json({ message: "Error del servidor" });
     }
 
 };

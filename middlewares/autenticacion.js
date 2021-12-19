@@ -6,8 +6,14 @@ const dotenv = require("dotenv")
 //------------------------------
 let verificaToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
+
+    console.log('verificaToken: ', authHeader);
+
+
     if (authHeader) {
         const token = authHeader.split(" ")[1];
+
+        //console.log('verificaToken: ', token);
 
         jwt.verify(token, process.env.ENV_SECRET_TOKEN, (err, decoded) => {
             if (err) {

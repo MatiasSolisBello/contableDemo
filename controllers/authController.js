@@ -9,12 +9,12 @@ function login(req, res) {
     let correo = req.body.correo;
     let clave = req.body.clave;
 
-    //console.log(correo, clave);
+    console.log(correo, clave);
 
     //verificacion de datos recibidos
     Usuario.findOne({ correo }).then(usuario => {
         var token = jwt.sign(
-            { id: usuario.id },
+            { id: usuario._id },
             process.env.ENV_SECRET_TOKEN,
             { expiresIn: process.env.ENV_EXPIRE }
         );

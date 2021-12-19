@@ -14,14 +14,14 @@ const producto_routes = require('./routes/productoRoute');
 const auth_routes = require('./routes/authRoute');
 const payment_routes = require('./routes/paymentRoute');
 
-//Creamos la global.__basedir para la carga masiva
-global.__basedir = __dirname;
-
 //Inicializamos la app con express
 const app = express();
 
 //Inicializamos dotenv para usar las variables de entorno del .env
 dotenv.config();
+
+//Creamos la __dirname para mostrar html de paypal
+app.use(express.static(path.join(__dirname, 'public')));
 
 //Configuraciones iniciales
 app.use(bodyParser.json({ extended: true }));
