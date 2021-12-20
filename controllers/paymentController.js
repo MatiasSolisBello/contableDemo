@@ -23,8 +23,8 @@ const createOrder = async (req, res) => {
                     amount: {
                         currency_code: "USD",
                         value: producto.precio,
-                        producto
                     },
+                    description: producto.nombre
                 },
             ],
 
@@ -34,11 +34,11 @@ const createOrder = async (req, res) => {
                 landing_page: "NO_PREFERENCE",
                 user_action: "PAY_NOW",
                 return_url: `${process.env.HOST}/capture-order`,
-                cancel_url: `${process.env.HOST}/cancel-payment`,
+                cancel_url: `${process.env.HOST}/cancel-order`,
             },
         };
 
-        console.log('ORDEN:', order.application_context);
+        console.log('createOrder. ORDEN:', order.application_context);
 
         // format the body
         const params = new URLSearchParams();
@@ -78,7 +78,7 @@ const createOrder = async (req, res) => {
         return res.json(response.data);
 
     } catch (error) {
-        console.log(error.message);
+        console.log('createOrder(ERROR): ', error.message);
         res.status(500).json({ mensaje: 'Error en el servidor' });
     }
 }
@@ -88,7 +88,7 @@ const createOrder = async (req, res) => {
 const captureOrder = async (req, res) => {
     const { token } = req.query;
 
-    console.log(token);
+    console.log('captureOrder(Token): ', token);
 
     try {
         const response = await axios.post(
@@ -102,11 +102,11 @@ const captureOrder = async (req, res) => {
             }
         ); 
 
-        console.log(response.data);
+        console.log('captureOrder(DATA): ', response.data);
 
         res.redirect("/payed.html");
     } catch (error) {
-        console.log(error.message);
+        console.log('captureOrder(ERROR): ',error.message);
         return res.status(500).json({ message: "Error del servidor" });
     }
 
