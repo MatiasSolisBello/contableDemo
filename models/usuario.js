@@ -21,25 +21,31 @@ const UsuarioSchema = Schema({
 //------------------------------------------------------------
 //      ENCRIPTACION DE CONTRASEÑAS VIA POST Y PUT
 //------------------------------------------------------------
-UsuarioSchema.pre('save',function(next){
-    const usuario = this;
-    if(!usuario.isModified('clave')){
+UsuarioSchema.pre('save', async function (next) {
+    if (!this.isModified('clave')) {
         return next();
     }
-    bcrypt.genSalt(10).then(salts => {
-        bcrypt.hash(this.clave,salts).then(hash => {
-            this.clave = hash;
-            next();
-        }).catch(error => next(error));
-    }).catch(error => next(error));
+    try {
+        const salt = await bcrypt.genSalt(10);
+        this.clave = await bcrypt.hash(this.clave, salt);
+        next();
+    } catch (error) {
+        next(error);
+    }
 });
 
-UsuarioSchema.pre('findOneAndUpdate', async function () {
-    this._update.clave = await bcrypt.hash(this._update.clave, 10)
-})
 
-UsuarioSchema.pre('useFindAndModify', async function () {
-    this._update.clave = await bcrypt.hash(this._update.clave, 10)
-})
+UsuarioSchema.pre('findOneAndUpdate', async function (next) {
+    if (this._update.clave) {
+        const hash = await bcrypt.hash(this._update.clave, 10);
+        this._update.clave = hash;
+    }
+    next();
+});
+
+// OBSOLETO
+//UsuarioSchema.pre('useFindAndModify', async function () {
+//    this._update.clave = await bcrypt.hash(this._update.clave, 10)
+//})
 
 module.exports = mongoose.model('usuario',UsuarioSchema);

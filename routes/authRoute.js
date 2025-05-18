@@ -1,7 +1,7 @@
 'use strict'
 
 const express = require('express');
-const AuthCtrl = require('../controllers/AuthController');
+const AuthCtrl = require('../controllers/authController');
 const {verificaToken} = require('../middlewares/autenticacion');
 const api = express.Router();
 

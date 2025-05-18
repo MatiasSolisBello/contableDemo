@@ -1,73 +1,63 @@
 const jwt = require('jsonwebtoken');
-const dotenv = require("dotenv")
+require('dotenv').config();
 
 //------------------------------
 // Verificar Token
 //------------------------------
-let verificaToken = (req, res, next) => {
+const verificaToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
 
-    console.log('verificaToken: ', authHeader);
-
-
-    if (authHeader) {
-        const token = authHeader.split(" ")[1];
-
-        //console.log('verificaToken: ', token);
-
-        jwt.verify(token, process.env.ENV_SECRET_TOKEN, (err, decoded) => {
-            if (err) {
-                return res.status(401).json({
-                    message: 'Token no válido'
-                });
-            }
-            req.usuario = decoded;
-            next();
-        });
-    } else {
-        res.status(401).json({
-            message: "No estas autenticado"
-        });
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return res.status(401).json({ message: "No estás autenticado" });
     }
+
+    const token = authHeader.split(" ")[1];
+
+    jwt.verify(token, process.env.ENV_SECRET_TOKEN, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({ 
+                message: "Token no válido o expirado" 
+            });
+        }
+
+        req.usuario = decoded;
+        next();
+    });
 };
 
 
 //------------------------------
 // Verificar Admin
 //------------------------------
-let verificaAdmin = (req, res, next) => {
+const verificaAdmin = (req, res, next) => {
     const usuario = req.usuario;
 
-    console.log('verificaAdmin: ', usuario.role);
-
-    if (usuario.role === 'ADMIN_ROLE') {
-        next();
-    } else {
-        return res.json({
+    if (!usuario || usuario.role !== 'ADMIN_ROLE') {
+        return res.status(403).json({
             message: 'El usuario no es administrador'
         });
     }
-}
+
+    next();
+};
 
 
 
 //------------------------------
 // Verificar si es personal de la empresa(ADMIN O BODEGA)
 //------------------------------
-let verificaPersonal = (req, res, next) => {
+const verificaPersonal = (req, res, next) => {
     const usuario = req.usuario;
 
-    console.log('verificaPersonal: ', usuario.role);
-
-    if (usuario.role === 'BODEGA_ROLE' || usuario.role === 'ADMIN_ROLE') {
-        next();
-    } else {
-        return res.json({
+    if (!usuario || !['ADMIN_ROLE', 'BODEGA_ROLE'].includes(usuario.role)) {
+        return res.status(403).json({
             message: 'El usuario no posee privilegios para acceder a estos datos'
         });
     }
 
-}
+    next();
+};
+
 
 module.exports = {
     verificaToken,

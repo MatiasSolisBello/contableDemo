@@ -4,63 +4,42 @@ const dotenv = require('dotenv')
 const jwt = require('jsonwebtoken');
 
 /*-------------LOGIN USUARIO-------------*/
-function login(req, res) {
-    //datos a recibir
-    let correo = req.body.correo;
-    let clave = req.body.clave;
+async function login(req, res) {
+    const { correo, clave } = req.body;
 
-    console.log(correo, clave);
+    try {
+        const usuario = await Usuario.findOne({ correo });
+        if (!usuario) {
+            return res.status(401).json({ message: 'Usuario no encontrado' });
+        }
 
-    //verificacion de datos recibidos
-    Usuario.findOne({ correo }).then(usuario => {
-        var token = jwt.sign(
-            { id: usuario._id },
-            process.env.ENV_SECRET_TOKEN,
-            { expiresIn: process.env.ENV_EXPIRE }
-        );
+        const match = await bcrypt.compare(clave, usuario.clave);
+        if (!match) {
+            return res.status(401).json({ message: 'Contraseña incorrecta' });
+        }
 
-        console.log('Login: ', expiresIn)
+        const payload = {
+            id: usuario._id,
+            role: usuario.role
+        };
 
-        //comparamos clave
-        bcrypt.compare(clave, usuario.clave).then(match => {
-            if (match) {
-                payload = {
-                    nombre: usuario.nombre,
-                    role: usuario.role
-                }
-
-                jwt.sign(payload, process.env.ENV_SECRET_TOKEN,
-                    function (error, token) {
-                        if (error) {
-                            res.status(500).send({
-                                message: 'ERROR EN EL SERVIDOR 01: ', error
-                            });
-                        } else {
-                            res.status(200).send({
-                                message: 'ACCESO AUTORIZADO',
-                                payload,
-                                token
-                            });
-                        }
-                    }
-                )
-            } else {
-                res.status(200).send({
-                    message: 'DATOS INGRESADOS DE FORMA INCORRECTA'
-                });
-            }
-        }).catch(error => {
-            console.log(error);
-            res.status(400).send({
-                message: 'ERROR EN EL SERVIDOR 02: ', error
-            });
+        const token = jwt.sign(payload, process.env.ENV_SECRET_TOKEN, {
+            algorithm: 'HS256',
+            expiresIn: '15m'
         });
-    }).catch(error => {
-        res.status(400).send({
-            message: 'DATOS INGRESADOS DE FORMA INCORRECTA'
+
+        res.status(200).json({
+            message: 'Acceso autorizado',
+            token,
+            payload
         });
-    });
+
+    } catch (error) {
+        console.error('Error en login:', error);
+        res.status(500).json({ message: 'Error del servidor', error });
+    }
 }
+
 
 /*-------------REGISTRO USUARIO-------------*/
 const register = async (req, res) => {

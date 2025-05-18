@@ -11,6 +11,6 @@ const BodegaSchema = Schema({
         type: String, required:true, 
         enum: ['EN Mantencion', 'Abierto', 'Cerrado'] 
     },    
-    usuario: {type: Schema.ObjectId, ref: "usuario", required:true},      
+    usuario: {type: Schema.ObjectId, ref: "usuario", required:false},      
 })
 module.exports = mongoose.model('bodega',BodegaSchema);
