@@ -2,6 +2,9 @@
 
 Experiment made with Node.js / Express / MongoDB
 
+## Download Mongo (Include Mongo Compass):
+* https://www.mongodb.com/try/download/community
+* 
 
 ## For execute this project, you need: 
 + Execute "npm install" or "npm i"
