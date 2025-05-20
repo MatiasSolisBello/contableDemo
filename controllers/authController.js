@@ -25,7 +25,7 @@ async function login(req, res) {
 
         const token = jwt.sign(payload, process.env.ENV_SECRET_TOKEN, {
             algorithm: 'HS256',
-            expiresIn: '15m'
+            expiresIn: process.env.ENV_EXPIRE
         });
 
         res.status(200).json({
@@ -56,8 +56,8 @@ const register = async (req, res) => {
 
 /*-------------REFRESH TOKEN-------------*/
 function logout(req, res) {
-    const refreshToken = req.body.token;
-    refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
-    res.status(200).json("You logged out successfully.");
+    const { refreshToken } = req.body;
+    Session.deleteOne({ refreshToken });
+    res.status(200).json({ message: 'Sesión cerrada correctamente' });
 }
 module.exports = { login, register, logout };
