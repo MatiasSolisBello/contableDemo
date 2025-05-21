@@ -19,7 +19,8 @@ async function login(req, res) {
         }
 
         const payload = {
-            id: usuario._id,
+            sub: usuario._id,
+            nombre: usuario.nombre,
             role: usuario.role
         };
 
