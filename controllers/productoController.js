@@ -13,8 +13,7 @@ const guardar = async (req, res) => {
         imagen: req.file.path
     };
 
-    /*console.log('guardar01: ', newProducto)*/
-
+    
     try {
         const product = new Producto(newProducto);
         await product.save();
@@ -31,9 +30,16 @@ const guardar = async (req, res) => {
 /*-------------BUSCAR PRODUCTO-------------*/
 const buscar = async (req, res) => {
     try {
-        const producto = await Producto.find()
-            .populate('bodega', ['nombre', 'direccion']);
-        res.status(200).json(producto);
+        const productos = await Producto.find().populate('bodega', 
+            ['nombre', 'direccion']
+        );
+
+        const productosConURL = productos.map(producto => ({
+            ...producto.toObject(),
+            imagen: `http://localhost:5000/uploads/${path.basename(producto.imagen)}`
+        }));
+
+        res.status(200).json(productosConURL);
     } catch (error) {
         res.status(404).json({ mensaje: error });
     }

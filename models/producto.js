@@ -8,6 +8,6 @@ const ProductoSchema = Schema({
     precio: {type: Number, required:true },
     stock: {type: Number, required:true },
     imagen: {type: String, required:false },
-    bodega: {type: Schema.ObjectId, ref: "bodega", required:true},
+    bodega: {type: Schema.ObjectId, ref: "bodega", required:false},
 })
 module.exports = mongoose.model('producto',ProductoSchema);
