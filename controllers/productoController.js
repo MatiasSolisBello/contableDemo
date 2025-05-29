@@ -34,10 +34,17 @@ const buscar = async (req, res) => {
             ['nombre', 'direccion']
         );
 
-        const productosConURL = productos.map(producto => ({
-            ...producto.toObject(),
-            imagen: `http://localhost:5000/uploads/${path.basename(producto.imagen)}`
-        }));
+        const productosConURL = productos.map(producto => {
+            const productoObj = producto.toObject();
+            const imagenURL = producto.imagen
+                ? `http://localhost:5000/uploads/${path.basename(producto.imagen)}`
+                : null;
+
+            return {
+                ...productoObj,
+                imagen: imagenURL
+            };
+        });
 
         res.status(200).json(productosConURL);
     } catch (error) {
