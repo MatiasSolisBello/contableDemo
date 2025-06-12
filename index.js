@@ -17,6 +17,11 @@ const payment_routes = require('./routes/paymentRoute');
 //Inicializamos la app con express
 const app = express();
 
+app.use(cors({ origin: 'http://localhost:4200' }));
+
+// Este middleware SOLO interpreta JSON, no afecta FormData
+app.use(express.json());
+
 //Inicializamos dotenv para usar las variables de entorno del .env
 dotenv.config();
 
@@ -26,7 +31,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 //Configuraciones iniciales
 app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
 
 //Definimos las rutas siempre después de activar cors
 app.use('/api', bodega_routes);
@@ -36,7 +40,7 @@ app.use('/api', auth_routes);
 app.use('/api', payment_routes);
 
 //carpeta uploads
-app.use('/uploads', express.static(path.resolve('uploads')));
+app.use('/uploads', express.static('uploads'));
 
 //Traemos la cadena conexión de MongoDB del .env
 let url = process.env.ENV_LINK_BD;

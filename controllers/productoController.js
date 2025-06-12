@@ -7,10 +7,10 @@ const path = require('path')
 /*-------------GUARDAR PRODUCTO-------------*/
 const guardar = async (req, res) => {
     const { nombre, descripcion, precio, stock, bodega } = req.body;
+    const imagen = req.file ? req.file.filename : null;
 
     const newProducto = {
-        nombre, descripcion, precio, stock, bodega,
-        imagen: req.file.path
+        nombre, descripcion, precio, stock, bodega, imagen
     };
 
     
@@ -95,23 +95,26 @@ const editar = async (req, res) => {
 /*-------------BORRAR PRODUCTO-------------*/
 const borrar = async (req, res) => {
     const { id } = req.params;
-
-    //console.log('---Borrar: ', { id });
-
     try {
-        const producto = await Producto.findByIdAndDelete(id)
-        //console.log('---Borrar: ', producto);
+        const producto = await Producto.findByIdAndDelete(id);
+        console.log('---Borrar: ', producto);
 
-        //si producto es nulo
-        if (producto == null) ({
-            mensaje: 'No existe un producto con ese Id.'
-        })
-
-        //si producto existe
-        if (producto) {
-            await fs.unlink(path.resolve(producto.imagen));
-            //console.log('---Borrar: ', producto.imagen)
+        if (producto == null) {
+            return res.status(404).json({
+                mensaje: 'No existe un producto con ese Id.'
+            });
         }
+
+        if (producto.imagen) {
+            try {
+                await fs.unlink(
+                    path.resolve(__dirname, '../uploads', producto.imagen)
+                );
+            } catch (err) {
+                console.warn('No se pudo borrar la imagen:', err.message);
+            }
+        }
+
         return res.json({ 
             message: 'Producto con id: ' + id + ' eliminado' 
         });
@@ -119,11 +122,10 @@ const borrar = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             mensaje: 'Error en el servidor',
-            error
+            error: error.message
         });
     }
-}
-
+};
 module.exports = {
     guardar,
     buscar,

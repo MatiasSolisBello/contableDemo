@@ -1,7 +1,7 @@
 'use strict'
 const express = require('express');
 const usuarioController = require('../controllers/usuarioController');
-const {verificaToken, verificaAdmin} = require('../middlewares/autenticacion');
+const {verificaToken, verificaAdmin, verificaPersonal} = require('../middlewares/autenticacion');
 const api= express.Router();
 
 api.post(
@@ -12,7 +12,7 @@ api.post(
 
 api.get(
     '/usuario', 
-    [verificaToken, verificaAdmin], 
+    [verificaToken, verificaPersonal], 
     usuarioController.buscar
 )
 

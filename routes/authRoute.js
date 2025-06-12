@@ -7,8 +7,8 @@ const { loginLimiter } = require('../middlewares/limiter');
 const api = express.Router();
 
 api.post(
-    '/login',
-    loginLimiter, AuthCtrl.login
+    '/login', //loginLimiter, 
+    AuthCtrl.login
 )
 
 api.post(
