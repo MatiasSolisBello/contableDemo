@@ -71,34 +71,53 @@ const buscarPorId = async (req, res) => {
 
 /*-------------EDITAR PRODUCTO-------------*/
 const editar = async (req, res) => {
-    const id = req.params.id;
-    const producto = req.body;
-
-    console.log('---Actualizar: ', id );
+    const { id } = req.params;
 
     try {
-        const productoActualizado = await Producto.findByIdAndUpdate(id, producto);
-        if (productoActualizado == null)
+        const productoExistente = await Producto.findById(id);
+        if (!productoExistente) {
             return res.status(404).json({
                 mensaje: 'No existe un Producto con ese Id.'
-            })
+            });
+        }
+
+        // Si viene una nueva imagen
+        if (req.file) {
+            // Eliminar la imagen anterior
+            if (productoExistente.imagen) {
+                const rutaAnterior = path.resolve(__dirname, '../uploads', productoExistente.imagen);
+                try {
+                    await fs.unlink(rutaAnterior);
+                } catch (err) {
+                    console.warn('No se pudo borrar la imagen anterior:', err.message);
+                }
+            }
+
+            // Reemplazar el nombre de la imagen en los datos actualizados
+            req.body.imagen = req.file.filename;
+        }
+
+        const productoActualizado = await Producto.findByIdAndUpdate(id, req.body, {
+            new: true, // para que retorne el objeto actualizado
+            runValidators: true // por si tienes validaciones en el esquema
+        });
+
         res.status(200).json({
             message: 'Producto actualizado',
             productoActualizado
         });
+
     } catch (error) {
+        console.error(error);
         res.status(500).json({ mensaje: 'Error en el servidor' });
     }
-
-}
+};
 
 /*-------------BORRAR PRODUCTO-------------*/
 const borrar = async (req, res) => {
     const { id } = req.params;
     try {
         const producto = await Producto.findByIdAndDelete(id);
-        console.log('---Borrar: ', producto);
-
         if (producto == null) {
             return res.status(404).json({
                 mensaje: 'No existe un producto con ese Id.'

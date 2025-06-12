@@ -29,6 +29,7 @@ api.get(
 api.put(
     '/producto/:id',
     [verificaToken, verificaPersonal],
+    upload.single('imagen'),
     productoController.editar
 )
 
